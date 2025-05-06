@@ -44,8 +44,8 @@ public class PropsSetup : MonoBehaviour
     [SerializeField] private float maxZFloorNew = 43.75f;
 
     [SerializeField] private float spaceXFloorNew = 5f;
-    [SerializeField] private float minXFloorNew = -4f;
-    [SerializeField] private float maxXFloorNew = 4f;
+    [SerializeField] private float minXFloorNew = -8f;
+    [SerializeField] private float maxXFloorNew = 8f;
     [SerializeField] private GameObject floorNewContainer;
 
     private int wallCount = 0;
@@ -131,7 +131,7 @@ public class PropsSetup : MonoBehaviour
         Debug.Log($"Wall Count: {wallCount}");
         for (int i = 0; i < wallCount; i++)
         {
-            for (int j = 0; j < 3; j++)
+            for (int j = 0; j < 5; j++)
             {
                 GameObject wall = Instantiate(Resources.Load(floorNewPrefabPath) as GameObject);
                 wall.transform.SetParent(floorNewContainer.transform);
@@ -139,7 +139,7 @@ public class PropsSetup : MonoBehaviour
                 randomUpDown = Random.Range(-0.1f, 0.1f);
                 Debug.Log($"Random Up Down: {randomUpDown}");
 
-                wall.transform.localPosition = new Vector3(minXFloorNew + (j * spaceXFloorNew), -1 + randomUpDown, minZFloornew + (i * spaceZFloorNew));
+                wall.transform.localPosition = new Vector3(minXFloorNew + (j * spaceXFloorNew) - spaceXFloorNew, -1 + randomUpDown, minZFloornew + (i * spaceZFloorNew));
                 wall.transform.localEulerAngles = new Vector3(0, 0, 0);
                 if (wallMesh.Length == 0)
                 {

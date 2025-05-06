@@ -29,8 +29,8 @@ public class StandPoint
             Debug.LogError("Point transform is not assigned.");
             return;
         }
-        
-        pointTransform.position = position;
+
+        position = pointTransform.position;
     }
 
     public void SetStandPointPosition(Vector3 position)

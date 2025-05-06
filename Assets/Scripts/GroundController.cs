@@ -70,10 +70,11 @@ public class GroundController : MonoBehaviour
                 {
                     if (g.groundTransform.position.z > maxZ)
                     {
-                        maxZ = g.groundTransform.position.z;
+                        maxZ = g.groundTransform.position.z + groundLength * groundLength;
                     }
                 }
-                groundTransform.position = new Vector3(0, 0, maxZ + multiplierLogic * 2);
+                // groundTransform.position = new Vector3(0, 0, maxZ + multiplierLogic * 2);
+                groundTransform.position = new Vector3(0, 0, maxZ);
             }
         }
 
