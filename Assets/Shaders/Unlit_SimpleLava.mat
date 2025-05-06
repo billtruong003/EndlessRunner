@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Unlit_SimpleLava
+  m_Shader: {fileID: 4800000, guid: 20bffc1a09e76504b8380082ffe33727, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _DistortTex:
+        m_Texture: {fileID: 2800000, guid: 716010ae70e1b4e84ba6baf439991fae, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 43ac6d6d08d482045bc1df3a80c00afc, type: 3}
+        m_Scale: {x: 0.01, y: 0.01}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Amount: 0.1
+    - _Cutoff: 0.5
+    - _Distortion: 0.3
+    - _Edge: 1
+    - _EdgeBlur: 0.3
+    - _Height: 0.2
+    - _Offset: 1
+    - _Scale: 0.25
+    - _ScaleDist: 0.3
+    - _Speed: 0.2
+    - _SpeedDistortX: 0.5
+    - _SpeedDistortY: 0.5
+    - _SpeedMainX: 0.3
+    - _SpeedMainY: 0.3
+    - _Strength: 2.5
+    - _StrengthTop: 7
+    - _TopBlur: 0.7
+    - _VertexDistortion: 0.8
+    m_Colors:
+    - _Color: {r: 0.4056604, g: 0.074626215, b: 0.083875395, a: 1}
+    - _Color2: {r: 0.6037736, g: 0.24279104, b: 0.12246352, a: 1}
+    - _Color3: {r: 0.6981132, g: 0.31947342, b: 0.10866857, a: 1}
+    - _EdgeC: {r: 1, g: 0.3218025, b: 0.19999999, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

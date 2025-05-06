@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using NaughtyAttributes;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 
 public enum PropsType
@@ -29,7 +30,24 @@ public class PropsSetup : MonoBehaviour
     [SerializeField] private GameObject wallRightContainer;
     [SerializeField] private Mesh[] wallMesh;
 
-    
+    [Header("New Wall Props")]
+    [SerializeField] private string wallNewPrefabPath = "MeshNewWall_Base";
+    [SerializeField] private float spaceWallNew = 12.5f;
+    [SerializeField] private float minZWallNew = -43.75f;
+    [SerializeField] private float maxZWallNew = 43.75f;
+    [SerializeField] private GameObject wallNewContainer;
+
+    [Header("New Floor Props")]
+    [SerializeField] private string floorNewPrefabPath = "MeshNewFloor_Base";
+    [SerializeField] private float spaceZFloorNew = 12.5f;
+    [SerializeField] private float minZFloornew = -43.75f;
+    [SerializeField] private float maxZFloorNew = 43.75f;
+
+    [SerializeField] private float spaceXFloorNew = 5f;
+    [SerializeField] private float minXFloorNew = -4f;
+    [SerializeField] private float maxXFloorNew = 4f;
+    [SerializeField] private GameObject floorNewContainer;
+
     private int wallCount = 0;
     [Button("Clear All")]
     private void ClearAll()
@@ -74,6 +92,75 @@ public class PropsSetup : MonoBehaviour
         }
 
     }
+
+    [Button("Init Wall New ")]
+    private void InitNewWall()
+    {
+        wallCount = Mathf.RoundToInt((maxZWallNew - minZWallNew) / spaceWallNew) + 1;
+        Debug.Log($"Wall Count: {wallCount}");
+        for (int i = 0; i < wallCount; i++)
+        {
+            GameObject wall = Instantiate(Resources.Load(wallNewPrefabPath) as GameObject);
+            wall.transform.SetParent(wallNewContainer.transform);
+
+            wall.transform.localPosition = new Vector3(0, -1, minZWallNew + (i * spaceWallNew));
+            wall.transform.localEulerAngles = new Vector3(0, 0, 0);
+            if (wallMesh.Length == 0)
+            {
+                Debug.LogError("Wall Mesh is empty!");
+                continue;
+            }
+        }
+
+    }
+
+    [Button("Clear WallNew")]
+    private void ClearWallNew()
+    {
+        for (int i = wallNewContainer.transform.childCount - 1; i >= 0; i--)
+        {
+            DestroyImmediate(wallNewContainer.transform.GetChild(i).gameObject);
+        }
+    }
+
+    float randomUpDown;
+    [Button("Init Floor New")]
+    private void InitNewFloor()
+    {
+        wallCount = Mathf.RoundToInt((maxZFloorNew - minZFloornew) / spaceZFloorNew) + 1;
+        Debug.Log($"Wall Count: {wallCount}");
+        for (int i = 0; i < wallCount; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                GameObject wall = Instantiate(Resources.Load(floorNewPrefabPath) as GameObject);
+                wall.transform.SetParent(floorNewContainer.transform);
+
+                randomUpDown = Random.Range(-0.1f, 0.1f);
+                Debug.Log($"Random Up Down: {randomUpDown}");
+
+                wall.transform.localPosition = new Vector3(minXFloorNew + (j * spaceXFloorNew), -1 + randomUpDown, minZFloornew + (i * spaceZFloorNew));
+                wall.transform.localEulerAngles = new Vector3(0, 0, 0);
+                if (wallMesh.Length == 0)
+                {
+                    Debug.LogError("Wall Mesh is empty!");
+                    continue;
+                }
+            }
+
+        }
+
+    }
+
+    [Button("Clear Floor New")]
+    private void ClearFloorNew()
+    {
+        for (int i = floorNewContainer.transform.childCount - 1; i >= 0; i--)
+        {
+            DestroyImmediate(floorNewContainer.transform.GetChild(i).gameObject);
+        }
+    }
+
 
     [Button("Clear Wall")]
     private void ClearWall()
