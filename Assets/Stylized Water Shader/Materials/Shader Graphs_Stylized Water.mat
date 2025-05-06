@@ -52,21 +52,21 @@ Material:
     m_Ints: []
     m_Floats:
     - WORLD_SPACE_UV: 1
-    - _Depth_Fade_Distance: 5.02
+    - _Depth_Fade_Distance: 15
     - _Foam_Blend: 1
-    - _Horizon_Distance: 27.22
+    - _Horizon_Distance: 30
     - _Intersection_Foam_Blend: 0
-    - _Intersection_Foam_Color_Blend: 0.409
-    - _Intersection_Foam_Cutoff: 0.467
-    - _Intersection_Foam_Depth: 2.39
-    - _Intersection_Foam_Direction: 0.259
-    - _Intersection_Foam_Fade: 0.562
-    - _Intersection_Foam_Speed: 0.405
-    - _Intersection_Foam_Tiling: 12.7
-    - _Lighting_Hardness: 1
-    - _Lighting_Smoothness: 0.477
-    - _Normals_Scale: 0.1325
-    - _Normals_Speed: 0.0041
+    - _Intersection_Foam_Color_Blend: 0.628
+    - _Intersection_Foam_Cutoff: 1
+    - _Intersection_Foam_Depth: 0.35
+    - _Intersection_Foam_Direction: 0.563
+    - _Intersection_Foam_Fade: 0
+    - _Intersection_Foam_Speed: 0.438
+    - _Intersection_Foam_Tiling: 46.6
+    - _Lighting_Hardness: 0.758
+    - _Lighting_Smoothness: 0.234
+    - _Normals_Scale: 0.2
+    - _Normals_Speed: 0.002
     - _Normals_Strength: 1
     - _QueueControl: 1
     - _QueueOffset: 0
@@ -78,13 +78,13 @@ Material:
     - _Surface_Foam_Blend: 1
     - _Surface_Foam_Color_Blend: 0.353
     - _Surface_Foam_Cutoff: 0.131
-    - _Surface_Foam_Direction: 0.519
+    - _Surface_Foam_Direction: 0.531
     - _Surface_Foam_Distortion: 0
     - _Surface_Foam_Speed: 0.178
     - _Surface_Foam_Tiling: 18
-    - _Wave_Length: 1.67
+    - _Wave_Length: 1
     - _Wave_Speed: 0.2
-    - _Wave_Steepness: 0.405
+    - _Wave_Steepness: 0
     m_Colors:
     - _Deep_Color: {r: 0, g: 0.51973677, b: 1, a: 0.36862746}
     - _Diffuse_Color: {r: 1, g: 0, b: 0, a: 1}

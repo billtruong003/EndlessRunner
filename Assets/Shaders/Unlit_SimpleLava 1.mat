@@ -34,26 +34,26 @@ Material:
     m_Ints: []
     m_Floats:
     - _Amount: 0.1
-    - _Cutoff: 0.5
-    - _Distortion: 1
-    - _Edge: 1
-    - _EdgeBlur: 1
-    - _Height: 0.2
-    - _Offset: 1.14
-    - _Scale: 0.1
-    - _ScaleDist: 0.1
+    - _Cutoff: 0.267
+    - _Distortion: 0.417
+    - _Edge: 0.9
+    - _EdgeBlur: 0.3
+    - _Height: 0.05
+    - _Offset: 3.17
+    - _Scale: 0
+    - _ScaleDist: 0.141
     - _Speed: 0.3
     - _SpeedDistortX: 1
     - _SpeedDistortY: 1
     - _SpeedMainX: 0
     - _SpeedMainY: 0
-    - _Strength: 1.79
+    - _Strength: 1.33
     - _StrengthTop: 10
     - _TopBlur: 0
-    - _VertexDistortion: 1
+    - _VertexDistortion: 0.017
     m_Colors:
     - _Color: {r: 0.114935085, g: 0.3679245, b: 0.098923095, a: 1}
-    - _Color2: {r: 0, g: 0.028301895, b: 0.002895889, a: 1}
+    - _Color2: {r: 0.08966714, g: 0.2924528, b: 0.11863651, a: 1}
     - _Color3: {r: 0.05549128, g: 0.2735849, b: 0.14932199, a: 1}
     - _EdgeC: {r: 0.15444048, g: 0.3018868, b: 0.06123176, a: 1}
   m_BuildTextureStacks: []

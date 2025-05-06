@@ -33,12 +33,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Amount: 0.1
-    - _Cutoff: 0.5
+    - _Amount: 0.05
+    - _Cutoff: 1
     - _Distortion: 0.3
     - _Edge: 1
     - _EdgeBlur: 0.3
-    - _Height: 0.2
+    - _Height: 0.1
     - _Offset: 1
     - _Scale: 0.25
     - _ScaleDist: 0.3
@@ -47,8 +47,8 @@ Material:
     - _SpeedDistortY: 0.5
     - _SpeedMainX: 0.3
     - _SpeedMainY: 0.3
-    - _Strength: 2.5
-    - _StrengthTop: 7
+    - _Strength: 3.33
+    - _StrengthTop: 10
     - _TopBlur: 0.7
     - _VertexDistortion: 0.8
     m_Colors:
