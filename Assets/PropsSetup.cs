@@ -114,7 +114,7 @@ public class PropsSetup : MonoBehaviour
 
     }
 
-    [Button("Clear WallNew")]
+    [Button("Clear Wall New")]
     private void ClearWallNew()
     {
         for (int i = wallNewContainer.transform.childCount - 1; i >= 0; i--)
@@ -176,7 +176,7 @@ public class PropsSetup : MonoBehaviour
     }
 
     MeshFilter floorFilter;
-    [Button("InitFloor")]
+    [Button("Init Floor")]
     private void InitFloor()
     {
         int floorCount = Mathf.FloorToInt((maxZFloor - minZFloor) / spaceFloor);
@@ -206,4 +206,50 @@ public class PropsSetup : MonoBehaviour
         }
     }
 
+    [Button("Init Floor New")]
+    private void InitFloorNew()
+    {
+        wallCount = Mathf.RoundToInt((maxZFloorNew - minZFloornew) / spaceZFloorNew) + 1;
+        Debug.Log($"Wall Count: {wallCount}");
+        for (int i = 0; i < wallCount; i++)
+        {
+            GameObject floor = Instantiate(Resources.Load(floorNewPrefabPath) as GameObject);
+            floor.transform.SetParent(floorNewContainer.transform);
+            floor.transform.localPosition = new Vector3(0, 0, minZFloornew + (i * spaceZFloorNew));
+            floor.transform.localEulerAngles = new Vector3(0, 0, 0);
+            if (floorMesh.Length == 0)
+            {
+                Debug.LogError("Wall Mesh is empty!");
+                continue;
+            }
+        }
+
+    }
+
+    [Button("Init Wall Combine WithFloor New ")]
+    private void InitNewWallWithFloor()
+    {
+        wallCount = Mathf.RoundToInt((maxZWallNew - minZWallNew) / spaceWallNew) + 1;
+        Debug.Log($"Wall Count: {wallCount}");
+        for (int i = 0; i < wallCount; i++)
+        {
+            GameObject wall = Instantiate(Resources.Load(wallNewPrefabPath) as GameObject);
+            Floor floor = wall.GetComponentInChildren<Floor>();
+            Wall wallSetup = wall.GetComponent<Wall>();
+            floor.InitFloor();
+            wallSetup.InitWall();
+
+            wall.transform.SetParent(wallNewContainer.transform);
+            wall.transform.localPosition = new Vector3(0, -1, minZWallNew + (i * spaceWallNew));
+            wall.transform.localEulerAngles = new Vector3(0, 0, 0);
+
+
+            if (wallMesh.Length == 0)
+            {
+                Debug.LogError("Wall Mesh is empty!");
+                continue;
+            }
+        }
+
+    }
 }

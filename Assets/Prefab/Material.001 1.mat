@@ -101,7 +101,7 @@ Material:
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
-    - _CurveValue: -0.07
+    - _CurveValue: 0
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
@@ -112,7 +112,7 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _LateralCurve: 1
+    - _LateralCurve: 0
     - _MaxCurveDistance: 100
     - _Metallic: 0
     - _MinCurveHeight: -100

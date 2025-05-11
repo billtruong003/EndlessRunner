@@ -2,8 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using NaughtyAttributes;
-using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,63 +9,89 @@ public class PlayerController : MonoBehaviour
     [Header("References")]
     [SerializeField] private CameraController cameraController;
     [SerializeField] private Animator animator;
+    [SerializeField] private Rigidbody rb;
 
     [Header("Animation")]
     [SerializeField] private string laneBlendParameter = "Centroid";
 
     [Header("Movement Settings")]
-    [SerializeField] private float laneSwitchTime = 0.25f;
+    [SerializeField] private float laneSwitchSpeed = 20f;
+    [SerializeField] private float laneSwitchSmoothTime = 0.1f;
     [SerializeField] private PlayerPoint currentLane = PlayerPoint.None;
     [SerializeField] private StandPoint[] lanePoints;
 
     [Header("Jump Settings")]
-    [SerializeField] private float jumpHeight = 2f;
-    [SerializeField] private float jumpDuration = 0.5f;
+    [SerializeField] private float jumpForce = 7f;
+    [SerializeField] private float jumpCooldown = 0.5f;
+    [SerializeField] private float fallMultiplier = 2.5f;
+    [SerializeField] private float fastFallMultiplier = 4f;
+    [SerializeField] private float groundCheckDistance = 0.5f; // Tăng khoảng cách raycast
+    [SerializeField] private LayerMask groundLayer; // Layer của mặt đất
 
     [Header("Slide Settings")]
-    [SerializeField] private float slideHeight = -0.5f;
     [SerializeField] private float slideDuration = 0.5f;
-    [SerializeField] private float slideFromJumpDuration = 0.2f;
 
     [Header("Camera Settings")]
-    [SerializeField] private float cameraFollowSpeed = 0.1f;
+    [SerializeField] private float cameraFollowSpeed = 0.3f;
 
     [Header("Swipe Settings")]
-    [SerializeField] private float minSwipeDistance = 50f; // Minimum distance for a swipe
-    [SerializeField] private float maxSwipeTime = 0.5f; // Max time for a swipe
+    [SerializeField] private float minSwipeDistance = 50f;
+    [SerializeField] private float maxSwipeTime = 0.5f;
 
     // Player state management
     private enum PlayerState { Idle, Jumping, Sliding }
     private PlayerState currentState = PlayerState.Idle;
     private Vector3 initialPosition;
-    private Tween verticalTween;
-    private Tween lateralTween;
-    private bool isVerticalInputLocked; // Blocks Up/Down during specific tweens
+    private bool isVerticalInputLocked;
     private Vector2 touchStartPos;
     private float touchStartTime;
     private bool isTouching;
+    private float lastJumpTime;
+    private Vector3 targetLanePosition;
+    private bool isMovingToLane;
+    private Vector3 laneVelocity;
+    private bool isFastFalling;
+    private bool isGround; // Biến lưu trạng thái chạm đất
 
     private void Start()
     {
         initialPosition = transform.position;
         if (currentLane == PlayerPoint.None)
             currentLane = PlayerPoint.Center;
+
+        rb = GetComponent<Rigidbody>();
+        rb.useGravity = true;
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
+        rb.interpolation = RigidbodyInterpolation.Interpolate;
+        targetLanePosition = transform.position;
+
+        // Khởi tạo isGround
+        isGround = false;
     }
 
     private void Update()
     {
+        // Cập nhật trạng thái chạm đất mỗi frame
+        isGround = IsGrounded();
+        Debug.Log($"IsGrounded: {isGround}");
+
         ProcessInput();
-    }
+        cameraController.FollowPosition(transform.position, cameraFollowSpeed);
+        // Điều chỉnh trọng lực khi nhảy
+        if (rb.linearVelocity.y < 0 && currentState == PlayerState.Jumping)
+        {
+            float multiplier = isFastFalling ? fastFallMultiplier : fallMultiplier;
+            rb.AddForce(Physics.gravity * (multiplier - 1) * rb.mass);
+        }
 
-    private void LateUpdate()
-    {
-        cameraController.MoveToTarget(transform.position, cameraFollowSpeed);
+        // Chuyển động làn
+        if (isMovingToLane)
+        {
+            MoveToTargetLane();
+        }
     }
-
-    // Handle both keyboard and touch swipe input
     private void ProcessInput()
     {
-        // Keyboard input
         if (Input.GetKeyDown(KeyCode.LeftArrow))
             ProcessAction(PlayerAction.MoveLeft);
         else if (Input.GetKeyDown(KeyCode.RightArrow))
@@ -77,7 +101,6 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.DownArrow))
             ProcessAction(PlayerAction.Slide);
 
-        // Touch swipe input
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
@@ -108,7 +131,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Process swipe direction
     private void ProcessSwipe(Vector2 swipeDelta)
     {
         float absX = Mathf.Abs(swipeDelta.x);
@@ -116,19 +138,16 @@ public class PlayerController : MonoBehaviour
 
         if (absX > absY)
         {
-            // Horizontal swipe
             Debug.Log($"Swipe horizontal: {(swipeDelta.x > 0 ? "Right" : "Left")}");
             ProcessAction(swipeDelta.x > 0 ? PlayerAction.MoveRight : PlayerAction.MoveLeft);
         }
         else
         {
-            // Vertical swipe
             Debug.Log($"Swipe vertical: {(swipeDelta.y > 0 ? "Up" : "Down")}");
             ProcessAction(swipeDelta.y > 0 ? PlayerAction.Jump : PlayerAction.Slide);
         }
     }
 
-    // Map actions to movement logic
     private void ProcessAction(PlayerAction action)
     {
         switch (action)
@@ -148,12 +167,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Handle jump logic
     private void PerformJump()
     {
-        if (isVerticalInputLocked)
+        if (isVerticalInputLocked || Time.time - lastJumpTime < jumpCooldown || !isGround)
         {
-            Debug.Log("Jump blocked: Vertical input locked");
+            Debug.Log("Jump blocked: " + (isVerticalInputLocked ? "Input locked" : Time.time - lastJumpTime < jumpCooldown ? "Cooldown" : "Not grounded"));
             return;
         }
 
@@ -163,26 +181,50 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        bool isJumpFromSlide = currentState == PlayerState.Sliding;
         currentState = PlayerState.Jumping;
-        KillVerticalTween();
+        isFastFalling = false;
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        lastJumpTime = Time.time;
 
-        float targetY = initialPosition.y + jumpHeight;
-        isVerticalInputLocked = isJumpFromSlide; // Lock only for jump-from-slide
-        verticalTween = transform.DOMoveY(targetY, jumpDuration / 2)
-            .SetEase(Ease.OutQuad)
-            .OnComplete(() =>
-            {
-                verticalTween = transform.DOMoveY(initialPosition.y, jumpDuration / 2)
-                    .SetEase(Ease.InQuad)
-                    .OnComplete(ResetToIdle);
-            });
-
-        // Optional: Trigger jump animation
-        // animator.SetTrigger("Jump");
+        // Bắt đầu coroutine CheckLanding
+        StartCoroutine(CheckLanding());
     }
 
-    // Handle slide logic
+    private bool IsGrounded()
+    {
+        Vector3 rayOrigin = transform.position + (Vector3.up * 0.1f); // Bắt đầu từ chân nhân vật
+        Ray ray = new Ray(rayOrigin, Vector3.down);
+        RaycastHit[] hits = Physics.RaycastAll(ray, groundCheckDistance, groundLayer);
+
+        if (hits.Length > 0)
+        {
+            Debug.Log($"RaycastAll found {hits.Length} hits:");
+            foreach (var hit in hits)
+            {
+                Debug.Log($"Hit: {hit.collider.name} (Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)}, Position: {hit.point})");
+            }
+            return true;
+        }
+        else
+        {
+            Debug.Log($"RaycastAll found no hits. Ray origin: {rayOrigin}, Distance: {groundCheckDistance}");
+            return false;
+        }
+    }
+
+    private IEnumerator CheckLanding()
+    {
+        Debug.Log("CheckLanding: Waiting for falling...");
+        yield return new WaitUntil(() => rb.linearVelocity.y < 0);
+        Debug.Log("CheckLanding: Falling detected, waiting for ground...");
+
+        yield return new WaitUntil(() => isGround);
+        Debug.Log("CheckLanding: Grounded, resetting to Idle");
+
+        ResetToIdle();
+    }
+
     private void PerformSlide()
     {
         if (isVerticalInputLocked)
@@ -197,42 +239,31 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        bool isSlideFromJump = currentState == PlayerState.Jumping;
+        if (currentState == PlayerState.Jumping)
+        {
+            isFastFalling = true;
+            return;
+        }
+
         currentState = PlayerState.Sliding;
-        KillVerticalTween();
-
-        float targetY = initialPosition.y + slideHeight;
-        float slideTime = isSlideFromJump ? slideFromJumpDuration : slideDuration / 2;
-        isVerticalInputLocked = isSlideFromJump; // Lock only for slide-from-jump
-        verticalTween = transform.DOMoveY(targetY, slideTime)
-            .SetEase(isSlideFromJump ? Ease.InQuad : Ease.OutQuad)
-            .OnComplete(() =>
-            {
-                DOVirtual.DelayedCall(slideDuration / 2, ReturnToIdle);
-            });
-
-        // Optional: Trigger slide animation
-        // animator.SetTrigger("Slide");
+        StartCoroutine(SlideCoroutine());
     }
 
-    // Return to idle state
-    private void ReturnToIdle()
+    private IEnumerator SlideCoroutine()
     {
-        verticalTween = transform.DOMoveY(initialPosition.y, slideDuration / 4)
-            .SetEase(Ease.InQuad)
-            .OnComplete(ResetToIdle);
+        yield return new WaitForSeconds(slideDuration);
+        ResetToIdle();
     }
 
-    // Reset state to idle
     private void ResetToIdle()
     {
-        verticalTween = null;
+        Debug.Log("ResetToIdle: Setting state to Idle");
         currentState = PlayerState.Idle;
         isVerticalInputLocked = false;
+        isFastFalling = false;
         ResetLaneAnimationIfCentered();
     }
 
-    // Handle lane movement
     private void MoveToLane(PlayerPoint point)
     {
         PlayerPoint targetLane = validPlayerPoint(point == PlayerPoint.Left);
@@ -244,27 +275,23 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        KillLateralTween();
         SetLaneAnimation(targetLane);
 
-        // Determine next lane
         PlayerPoint nextLane = targetLane;
         if (currentLane == PlayerPoint.Left && targetLane == PlayerPoint.Right ||
             currentLane == PlayerPoint.Right && targetLane == PlayerPoint.Left)
         {
-            nextLane = PlayerPoint.Center; // Go through Center
+            nextLane = PlayerPoint.Center;
         }
 
         SwitchToLane(nextLane);
     }
 
-    // Determine valid lane point
     private PlayerPoint validPlayerPoint(bool isLeft)
     {
         return isLeft ? PlayerPoint.Left : PlayerPoint.Right;
     }
 
-    // Set lane animation blend
     private void SetLaneAnimation(PlayerPoint point)
     {
         float targetValue = point switch
@@ -274,76 +301,82 @@ public class PlayerController : MonoBehaviour
             _ => 0f
         };
 
-        AnimateLaneBlend(targetValue);
-        DOVirtual.DelayedCall(laneSwitchTime * 2, () => AnimateLaneBlend(0f), true);
+        StartCoroutine(AnimateLaneBlend(targetValue));
     }
 
-    // Animate lane blend parameter
-    private void AnimateLaneBlend(float value)
+    private IEnumerator AnimateLaneBlend(float value)
     {
-        DOTween.To(() => animator.GetFloat(laneBlendParameter),
-            x => animator.SetFloat(laneBlendParameter, x), value, laneSwitchTime)
-            .SetEase(Ease.OutFlash);
+        float startValue = animator.GetFloat(laneBlendParameter);
+        float elapsed = 0f;
+
+        while (elapsed < laneSwitchSmoothTime)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / laneSwitchSmoothTime);
+            animator.SetFloat(laneBlendParameter, Mathf.Lerp(startValue, value, t));
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(laneSwitchSmoothTime);
+        StartCoroutine(AnimateLaneBlend(0f));
     }
 
-    // Switch to target lane
     private void SwitchToLane(PlayerPoint targetLane)
     {
         foreach (var standPoint in lanePoints)
         {
             if (standPoint.playerPoint == targetLane)
             {
-                Vector3 targetPos = standPoint.GetPositionPoint();
-                targetPos.y = transform.position.y;
-                Debug.Log($"SwitchToLane: Moving to {targetLane} at {targetPos}");
-
-                KillLateralTween();
-                lateralTween = DOTween.Sequence()
-                    .Append(transform.DOMoveX(targetPos.x, laneSwitchTime).SetEase(Ease.OutFlash))
-                    .Join(transform.DOMoveZ(targetPos.z, laneSwitchTime).SetEase(Ease.OutFlash))
-                    .OnComplete(() =>
-                    {
-                        lateralTween = null;
-                        currentLane = targetLane;
-                        Debug.Log($"SwitchToLane: Arrived at {currentLane}");
-                    });
-
+                targetLanePosition = standPoint.GetPositionPoint();
+                targetLanePosition.y = transform.position.y;
+                isMovingToLane = true;
+                currentLane = targetLane;
+                laneVelocity = Vector3.zero;
+                Debug.Log($"SwitchToLane: Moving to {targetLane} at {targetLanePosition}");
                 break;
             }
         }
     }
 
-    // Reset lane animation if in center
+    private void MoveToTargetLane()
+    {
+        Vector3 currentPos = transform.position;
+        Vector3 targetPos = new Vector3(targetLanePosition.x, transform.position.y, targetLanePosition.z);
+
+        Vector3 newPosition = Vector3.SmoothDamp(
+            currentPos,
+            targetPos,
+            ref laneVelocity,
+            laneSwitchSmoothTime,
+            laneSwitchSpeed,
+            Time.fixedDeltaTime
+        );
+
+        rb.MovePosition(new Vector3(newPosition.x, transform.position.y, newPosition.z));
+
+        float distance = Vector3.Distance(
+            new Vector3(currentPos.x, 0, currentPos.z),
+            new Vector3(targetPos.x, 0, currentPos.z)
+        );
+
+        if (distance < 0.02f)
+        {
+            isMovingToLane = false;
+            rb.MovePosition(new Vector3(targetPos.x, transform.position.y, targetPos.z));
+            laneVelocity = Vector3.zero;
+            Debug.Log($"SwitchToLane: Arrived at {currentLane}");
+        }
+    }
+
     private void ResetLaneAnimationIfCentered()
     {
         if (currentLane == PlayerPoint.Center)
         {
-            AnimateLaneBlend(0f);
+            StartCoroutine(AnimateLaneBlend(0f));
         }
     }
 
-    // Kill active vertical tween
-    private void KillVerticalTween()
-    {
-        if (verticalTween != null)
-        {
-            verticalTween.Kill();
-            verticalTween = null;
-            isVerticalInputLocked = false;
-        }
-    }
-
-    // Kill active lateral tween
-    private void KillLateralTween()
-    {
-        if (lateralTween != null)
-        {
-            lateralTween.Kill();
-            lateralTween = null;
-        }
-    }
-
-    [Button("Set Stand Points")]
+    [ContextMenu("Set Stand Points")]
     private void InitStandPoints()
     {
         foreach (var standPoint in lanePoints)
@@ -352,12 +385,20 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Enum for player actions
     private enum PlayerAction
     {
         MoveLeft,
         MoveRight,
         Jump,
         Slide
+    }
+
+    // Hỗ trợ debug raycast trong Editor
+    private void OnDrawGizmos()
+    {
+        Vector3 rayOrigin = transform.position + (Vector3.up * 0.1f);
+        Vector3 rayEnd = rayOrigin + Vector3.down * groundCheckDistance;
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(rayOrigin, rayEnd);
     }
 }

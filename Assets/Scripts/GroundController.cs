@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,11 +16,7 @@ public class GroundController : MonoBehaviour
 
     private Vector3 positionSpawn;
     private Vector3 positionEnd;
-    private int groundIndex = 0;
     private float groundSpace;
-    private float multiplierLogic;
-    private float startPose;
-    private float endPose;
 
     void Start()
     {
@@ -30,36 +25,28 @@ public class GroundController : MonoBehaviour
 
     private void Init()
     {
-        multiplierLogic = groundLength * groundSize;
-        startPose = multiplierLogic - 10;
-        endPose = -(multiplierLogic + 10);
-        grounds = new Ground[groundCount];
-        Ground ground = null;
+        groundSpace = groundLength;
+        positionSpawn = new Vector3(0, 0, 0);
+        positionEnd = new Vector3(0, 0, -groundLength);
 
+        grounds = new Ground[groundCount];
         for (int i = 0; i < groundCount; i++)
         {
-            GameObject groundObject = Instantiate(groundPrefab, this.transform);
-            multiplierLogic = groundLength * groundSize * i;
+            GameObject groundObj = Instantiate(groundPrefab, transform);
+            Vector3 spawnPos = new Vector3(0, 0, i * groundSpace);
+            Vector3 endPos = new Vector3(0, 0, spawnPos.z - groundLength);
 
-            positionSpawn = new Vector3(0, 0, (multiplierLogic * 2) + startPose);
-            positionEnd = new Vector3(0, 0, endPose);
-
-            groundObject.transform.localScale = new Vector3(groundWidth, 1, groundLength);
-
-            ground = new Ground(groundObject.transform);
-            ground.SetGroundPosition(positionSpawn, positionEnd);
-
-
-            grounds[i] = ground;
+            grounds[i] = new Ground(groundObj.transform);
+            grounds[i].SetGroundPosition(spawnPos, endPos);
         }
-
     }
 
-    Transform groundTransform = null;
     void Update()
     {
         foreach (Ground ground in grounds)
         {
+            if (ground.groundTransform == null) continue;
+
             Transform groundTransform = ground.groundTransform;
             groundTransform.position += Vector3.back * speed * Time.deltaTime;
 
@@ -70,14 +57,14 @@ public class GroundController : MonoBehaviour
                 {
                     if (g.groundTransform.position.z > maxZ)
                     {
-                        maxZ = g.groundTransform.position.z + groundLength * groundLength;
+                        maxZ = g.groundTransform.position.z;
                     }
                 }
-                // groundTransform.position = new Vector3(0, 0, maxZ + multiplierLogic * 2);
-                groundTransform.position = new Vector3(0, 0, maxZ);
+
+                Vector3 newPos = new Vector3(0, 0, maxZ + groundLength);
+                ground.SetGroundPosition(newPos, new Vector3(0, 0, newPos.z - groundLength));
             }
         }
-
     }
 }
 
@@ -87,21 +74,18 @@ public class Ground
     public Vector3 groundPositionSpawn;
     public Vector3 groundPositionEnd;
 
-    public Vector3 getSpawnPose() => groundPositionSpawn;
-    public Vector3 getEndPose() => groundPositionEnd;
+    public Vector3 GetSpawnPose() => groundPositionSpawn;
+    public Vector3 GetEndPose() => groundPositionEnd;
 
     public Ground(Transform groundTransform)
     {
         this.groundTransform = groundTransform;
     }
 
-    public void SetGroundPosition(Vector3 PositionSpawn, Vector3 PositionEnd)
+    public void SetGroundPosition(Vector3 positionSpawn, Vector3 positionEnd)
     {
-        groundTransform.position = PositionSpawn;
-        groundPositionSpawn = PositionSpawn;
-        groundPositionEnd = PositionEnd;
+        groundTransform.localPosition = positionSpawn;
+        groundPositionSpawn = positionSpawn;
+        groundPositionEnd = positionEnd;
     }
-
-
-
 }
