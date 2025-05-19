@@ -48,6 +48,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 3842d3b095f002747a9828539f105b53, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 738c6f80aaad4ea4ca08e6cb96cd1c70, type: 2}
     - target: {fileID: 919132149155446097, guid: 3842d3b095f002747a9828539f105b53, type: 3}
       propertyPath: m_Name
       value: wall_gated
