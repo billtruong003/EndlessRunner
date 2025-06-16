@@ -7,16 +7,16 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Custom_ShaderFog
+  m_Name: Shader Graphs_AdvancedWaterfall
   m_Shader: {fileID: -6465566751694194690, guid: ace5aedaac70ad64287511d171e6e5d0, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 2
-  m_EnableInstancingVariants: 1
+  m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
@@ -25,14 +25,10 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - Texture2D_7625495:
-        m_Texture: {fileID: 2800000, guid: 384e2c3baaa402f408a0e8e110c7eee7, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - Texture2D_B23D3796:
-        m_Texture: {fileID: 2800000, guid: 43ac6d6d08d482045bc1df3a80c00afc, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -51,35 +47,32 @@ Material:
     m_Ints: []
     m_Floats:
     - BOOLEAN_3B4DE909: 0
-    - Vector1_25A87481: 0.108
-    - Vector1_2D2F8B59: 0.02
-    - Vector1_36EC8EBD: 0
-    - Vector1_523CF9F9: 0.001
-    - Vector1_5AAC92D2: 0.03
+    - Vector1_25A87481: 0.2
+    - Vector1_2D2F8B59: 0.6061041
+    - Vector1_36EC8EBD: 1
+    - Vector1_523CF9F9: 0
+    - Vector1_5AAC92D2: 0.1
     - Vector1_82AFA5C7: 0.03
-    - Vector1_928B3B41: 10
+    - Vector1_928B3B41: 1
     - Vector1_960E898F: 0
-    - Vector1_96CBBEA4: 0.09
+    - Vector1_96CBBEA4: 0.3
     - Vector1_A77710BF: 1
-    - Vector1_D1DAD1FD: 0.062
-    - Vector1_DABF4AC1: 1
-    - Vector1_E285A04C: 0.004
-    - Vector1_E551740D: 1
+    - Vector1_D1DAD1FD: 0.2
+    - Vector1_DABF4AC1: 0.767
+    - Vector1_E285A04C: 0.2
+    - Vector1_E551740D: 0.4
     - Vector1_E76F4BD3: 0
     - Vector1_F278FEE0: 0
-    - Vector1_FA7C3821: 1
-    - _FogEnd: 10
-    - _FogStart: 0
-    - _QueueControl: 1
+    - Vector1_FA7C3821: -0.27
+    - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
     - Color_1DEAAAEB: {r: 1, g: 1, b: 1, a: 0}
-    - Color_51316B18: {r: 0.3537736, g: 0.6427613, b: 1, a: 0}
+    - Color_51316B18: {r: 0.15400907, g: 0.05882349, b: 0.5960785, a: 0}
     - Color_B3D1197F: {r: 0.44495368, g: 0.9339623, b: 0.9146175, a: 0.8235294}
-    - _FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &4273806979458099862
+--- !u!114 &8986788112752718080
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

@@ -5,14 +5,48 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7b4f2f63-9347-4505-b7ab-ce36295f141b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Shaders/Liquid.shader" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Shaders/Liquid.shader.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.EndlessRunner/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.EndlessRunner/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/BOXOPHOBIC/Skybox Cubemap Extended/Demo/Materials/LowPoly - Wood.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/BOXOPHOBIC/Skybox Cubemap Extended/Demo/Materials/LowPoly - Wood.mat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Packages/BOXOPHOBIC/Skybox Cubemap Extended/Demo/Materials/Skybox Cubemap Extended Blend.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/BOXOPHOBIC/Skybox Cubemap Extended/Demo/Materials/Skybox Cubemap Extended Blend.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/PolygonDungeon/URP_ExtractMe.unitypackage.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/PolygonFarm/URP_ExtractMe.unitypackage.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ithappy/Creative_Characters_FREE/Render_Pipeline_Convert/URP_to_BuiltIn_source.unitypackage.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/ithappy/Creative_Characters_FREE/Render_Pipeline_Convert/URP_to_HDRP_source.unitypackage.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Basics/circlestretchy_AB.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Basics/circlestretchy_AB.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Basics/glow2_ADD.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Basics/glow2_ADD.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Basics/gradient_circle_ADD.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Basics/gradient_circle_ADD.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Basics/ring_ADD.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Basics/ring_ADD.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Basics/rocketgradient_AB.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Basics/rocketgradient_AB.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Basics/sparkle2_ADD.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Basics/sparkle2_ADD.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Basics/sparkle_ADD.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Basics/sparkle_ADD.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Basics/triangle_soft_ADD.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Basics/triangle_soft_ADD.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Bubbles/bubble_half_clear_AB.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Bubbles/bubble_half_clear_AB.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Bubbles/bubble_half_thick_ADD.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Bubbles/bubble_half_thick_ADD.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Bubbles/bubble_round3_ADD.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Bubbles/bubble_round3_ADD.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Bubbles/bubble_soap_ADD.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Bubbles/bubble_soap_ADD.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Liquid/drop_AB.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Liquid/drop_AB.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Liquid/splat01_trsp_3x3_AB.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Liquid/splat01_trsp_3x3_AB.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Liquid/splat02_3x3_AB.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Liquid/splat02_3x3_AB.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Liquid/splat02_trsp_3x3_AB.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Liquid/splat02_trsp_3x3_AB.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Liquid/splat03_trsp_3x3_AB.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Liquid/splat03_trsp_3x3_AB.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Liquid/water_3x3_AB.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Liquid/water_3x3_AB.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Liquid/water_soft_3x3_AB.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Liquid/water_soft_3x3_AB.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Liquid/water_trsp_3x3_AB.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Liquid/water_trsp_3x3_AB.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Magic/aura_slam_ADD.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Magic/aura_slam_ADD.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Magic/magic_runecircle_ADD.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Magic/magic_runecircle_ADD.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Text/txt_splash.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Text/txt_splash.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Text/txt_splat.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Text/txt_splat.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Unsorted/talkbubble_4x4_AB.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Materials/Misc/Unsorted/talkbubble_4x4_AB.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Prefabs/Combat/Missiles/Liquid/LiquidMissileWater.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Prefabs/Combat/Missiles/Liquid/LiquidMissileWater.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Prefabs/Combat/Missiles/Liquid/LiquidMissileWaterClear.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Prefabs/Combat/Missiles/Liquid/LiquidMissileWaterClear.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Prefabs/Environment/Bubbles/SoapBubbleTrail.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Prefabs/Environment/Bubbles/SoapBubbleTrail.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Prefabs/Environment/Water/Boiling/WaterBoiling.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Prefabs/Environment/Water/Boiling/WaterBoiling.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Prefabs/Environment/Water/Bubbles/BubbleSimpleTrail.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Prefabs/Environment/Water/Bubbles/BubbleSimpleTrail.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Prefabs/Environment/Water/Bubbles/BubbleSimplestTrail.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/Epic Toon FX/Prefabs/Environment/Water/Bubbles/BubbleSimplestTrail.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/ithappy/Creative_Characters_FREE/Render_Pipeline_Convert/URP_to_BuiltIn_source.unitypackage.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/ithappy/Creative_Characters_FREE/Render_Pipeline_Convert/URP_to_HDRP_source.unitypackage.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SceneVFX.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SceneVFX.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Shaders/Custom_ShaderFog.mat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Shaders/Custom_ShaderFog.mat.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Shaders/Shader Graphs_LiquidEffect.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shaders/Shader Graphs_LiquidEffect.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Shaders/Shader Graphs_StylizedGlass.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shaders/Shader Graphs_StylizedGlass.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Stylized Water Shader/Materials/Shader Graphs_Stylized Water 1.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Stylized Water Shader/Materials/Shader Graphs_Stylized Water 1.mat" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,6 +135,9 @@
       <updated>1746606330008</updated>
       <workItem from="1746606331093" duration="2541000" />
       <workItem from="1747027975310" duration="1234000" />
+      <workItem from="1747046084883" duration="27000" />
+      <workItem from="1747628881100" duration="1870000" />
+      <workItem from="1748312747920" duration="1000" />
     </task>
     <servers />
   </component>
