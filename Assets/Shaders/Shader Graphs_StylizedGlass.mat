@@ -16,11 +16,11 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2999
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
-  m_LockedProperties: :m_CustomRenderQueue
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -38,21 +38,21 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - Vector1_18854F8C: 0.049
-    - Vector1_28BC39B5: 0.455
-    - Vector1_40385CE1: 4.9
-    - Vector1_48BDE471: 0.252
-    - Vector1_66425DE2: 0.431
-    - Vector1_7C2E78E4: 0.524
-    - Vector1_A0DB3845: 0.211
-    - Vector1_F1294C90: 0.12
-    - _QueueControl: 1
+    - Vector1_18854F8C: 0.664
+    - Vector1_28BC39B5: 0.363
+    - Vector1_40385CE1: 1.93
+    - Vector1_48BDE471: 0.49
+    - Vector1_66425DE2: 0.402
+    - Vector1_7C2E78E4: 1
+    - Vector1_A0DB3845: 0.282
+    - Vector1_F1294C90: 0.08
+    - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - Color_9B881ED6: {r: 0.6933962, g: 0.8709036, b: 1, a: 1}
-    - Color_BED8F987: {r: 0.3820755, g: 1, b: 0.8614002, a: 1}
-    - Color_CA4EAD0D: {r: 1, g: 1, b: 1, a: 0.078431375}
-    - Color_E9CFA916: {r: 0.5990566, g: 0.9589945, b: 1, a: 0.1647059}
+    - Color_9B881ED6: {r: 0.3820755, g: 0.75767666, b: 1, a: 1}
+    - Color_BED8F987: {r: 0.75, g: 0.9019608, b: 1, a: 0}
+    - Color_CA4EAD0D: {r: 0, g: 0.6079955, b: 1, a: 0}
+    - Color_E9CFA916: {r: 1, g: 0.035874438, b: 0, a: 0.039215688}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &385049832102807021

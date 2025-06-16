@@ -5,11 +5,10 @@
         _Color("Color", Color) = (0.5, 0.65, 1, 1)
         _MainTex("Main Texture", 2D) = "white" {}
         [HDR] _AmbientColor("Ambient Color", Color) = (0.4, 0.4, 0.4, 1)
-        [HDR] _SpecularColor("Specular Color", Color) = (0.9, 0.9, 0.9, 1)
-        _Glossiness("Glossiness", Float) = 32
-        [HDR] _RimColor("Rim Color", Color) = (1, 1, 1, 1)
-        _RimAmount("Rim Amount", Range(0, 1)) = 0.716
-        _RimThreshold("Rim Threshold", Range(0, 1)) = 0.1
+        [HDR] _ToonLitColor("Toon Lit Color", Color) = (1, 1, 1, 1)
+        [HDR] _ToonShadowColor("Toon Shadow Color", Color) = (0.5, 0.5, 0.5, 1)
+        _ToonThreshold("Toon Threshold", Range(0, 1)) = 0.5
+        _ToonSmoothness("Toon Smoothness", Range(0.001, 0.5)) = 0.05
     }
     SubShader
     {
@@ -52,11 +51,10 @@
             float4 _MainTex_ST;
             float4 _Color;
             float4 _AmbientColor;
-            float4 _SpecularColor;
-            float _Glossiness;
-            float4 _RimColor;
-            float _RimAmount;
-            float _RimThreshold;
+            float4 _ToonLitColor;
+            float4 _ToonShadowColor;
+            float _ToonThreshold;
+            float _ToonSmoothness;
 
             Varyings vert(Attributes input)
             {
@@ -77,36 +75,18 @@
 
                 // Normalize inputs
                 float3 normalWS = normalize(input.normalWS);
-                float3 viewDirWS = normalize(input.viewDirWS);
 
                 // Get main light
-                Light mainLight = GetMainLight();
+                Light mainLight = GetMainLight(input.shadowCoord);
                 float3 lightDirWS = mainLight.direction;
-                half3 lightColor = mainLight.color;
-                half shadow = MainLightRealtimeShadow(input.shadowCoord); // Compute shadow attenuation
-                half NdotL = dot(normalWS, lightDirWS);
-                half lightIntensity = smoothstep(0, 0.01, NdotL * shadow);
-                half4 light = lightIntensity * half4(lightColor, 1);
-
-                // Ambient light
-                half4 ambient = _AmbientColor;
-
-                // Specular
-                float3 halfVector = normalize(lightDirWS + viewDirWS);
-                float NdotH = dot(normalWS, halfVector);
-                float specularIntensity = pow(NdotH * lightIntensity, _Glossiness * _Glossiness);
-                float specularIntensitySmooth = smoothstep(0.005, 0.01, specularIntensity);
-                half4 specular = specularIntensitySmooth * _SpecularColor;
-
-                // Rim lighting
-                float rimDot = 1 - dot(viewDirWS, normalWS);
-                float rimIntensity = rimDot * pow(NdotL, _RimThreshold);
-                rimIntensity = smoothstep(_RimAmount - 0.01, _RimAmount + 0.01, rimIntensity);
-                half4 rim = rimIntensity * _RimColor;
+                half NdotL = saturate(dot(normalWS, lightDirWS));
+                half toonFactor = smoothstep(_ToonThreshold, _ToonThreshold + _ToonSmoothness, NdotL);
+                toonFactor *= mainLight.shadowAttenuation;
+                half3 toonShadedColor = lerp(_ToonShadowColor.rgb, _ToonLitColor.rgb, toonFactor);
 
                 // Final color
-                half4 finalColor = _Color * sample * (ambient + light + specular + rim);
-                return finalColor;
+                half3 finalColor = (_Color * sample).rgb * toonShadedColor + _AmbientColor.rgb;
+                return half4(finalColor, 1.0);
             }
             ENDHLSL
         }
@@ -118,17 +98,16 @@
 
             ZWrite On
             ZTest LEqual
+            ColorMask 0
 
             HLSLPROGRAM
             #pragma vertex ShadowVert
             #pragma fragment ShadowFrag
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
 
             struct Attributes
             {
                 float4 position : POSITION;
-                float3 normal : NORMAL;
             };
 
             struct Varyings
@@ -136,14 +115,11 @@
                 float4 positionCS : SV_POSITION;
             };
 
-            float3 _LightDirection;
-
             Varyings ShadowVert(Attributes input)
             {
                 Varyings output;
                 float3 worldPos = TransformObjectToWorld(input.position.xyz);
-                float3 normalWS = TransformObjectToWorldNormal(input.normal);
-                output.positionCS = TransformWorldToHClip(ApplyShadowBias(worldPos, normalWS, _LightDirection));
+                output.positionCS = TransformWorldToHClip(worldPos);
                 return output;
             }
 
@@ -154,4 +130,5 @@
             ENDHLSL
         }
     }
+    FallBack "Hidden/Universal Render Pipeline/FallbackError"
 }
