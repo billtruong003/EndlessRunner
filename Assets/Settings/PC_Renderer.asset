@@ -1,5 +1,41 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8859614824125610976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceba7d3dc4357674192a348f6bbe80dc, type: 3}
+  m_Name: ScreenSpaceOutlines
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  _renderPassEvent: 300
+  _outlinesLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  _outlinesOccluderLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _outlineSettings:
+    outlineColor: {r: 0, g: 0, b: 0, a: 1}
+    outlineScale: 13
+    depthThreshold: 60.4
+    robertsCrossMultiplier: 278
+    normalThreshold: 0.642
+    steepAngleThreshold: 1.4
+    steepAngleMultiplier: 406
+  _normalsSettings:
+    colorFormat: 2
+    depthBufferBits: 16
+    filterMode: 1
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    perObjectData: 0
+    enableDynamicBatching: 0
+    enableInstancing: 0
 --- !u!114 &-7673739712539628654
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39,6 +75,38 @@ MonoBehaviour:
     perObjectData: 0
     enableDynamicBatching: 1
     enableInstancing: 1
+--- !u!114 &-3818632616490926885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b847fd7993c78764e83316d961672dea, type: 3}
+  m_Name: ScreenSpaceOutlines
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  renderPassEvent: 550
+  outlinesLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  outlineSettings:
+    outlineColor: {r: 0, g: 0, b: 0, a: 1}
+    outlineScale: 16.1
+    depthThreshold: 36.8
+    robertsCrossMultiplier: 307
+    normalThreshold: 0.66
+    steepAngleThreshold: 1.25
+    steepAngleMultiplier: 340
+    colorFormat: 0
+    depthBufferBits: 0
+    filterMode: 1
+    backgroundColor: {r: 0, g: 0, b: 0, a: 1}
+    perObjectData: 0
+    enableDynamicBatching: 0
+    enableInstancing: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,8 +133,9 @@ MonoBehaviour:
     probeVolumeBlendStatesCS: {fileID: 7200000, guid: b9a23f869c4fd45f19c5ada54dd82176, type: 3}
   m_RendererFeatures:
   - {fileID: 7833122117494664109}
-  - {fileID: 1794792354592179339}
-  m_RendererFeatureMap: ad6b866f10d7b46c8bc40d252362e818
+  - {fileID: -3818632616490926885}
+  - {fileID: -8859614824125610976}
+  m_RendererFeatureMap: ad6b866f10d7b46cdb7c5606de7d01cb204435f941530c85
   m_UseNativeRenderPass: 1
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -92,38 +161,6 @@ MonoBehaviour:
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 0
---- !u!114 &1794792354592179339
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b847fd7993c78764e83316d961672dea, type: 3}
-  m_Name: ScreenSpaceOutlines
-  m_EditorClassIdentifier: 
-  m_Active: 1
-  renderPassEvent: 350
-  outlinesLayerMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  outlineSettings:
-    outlineColor: {r: 0, g: 0, b: 0, a: 1}
-    outlineScale: 2.27
-    depthThreshold: 17.2
-    robertsCrossMultiplier: 70.9
-    normalThreshold: 0.4
-    steepAngleThreshold: 0.2
-    steepAngleMultiplier: 25
-    colorFormat: 0
-    depthBufferBits: 0
-    filterMode: 0
-    backgroundColor: {r: 0, g: 0, b: 0, a: 0}
-    perObjectData: -1
-    enableDynamicBatching: 1
-    enableInstancing: 1
 --- !u!114 &7833122117494664109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,7 +173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f62c9c65cf3354c93be831c8bc075510, type: 3}
   m_Name: ScreenSpaceAmbientOcclusion
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   m_Settings:
     AOMethod: 0
     Downsample: 0

@@ -151,7 +151,6 @@
             #pragma vertex ShadowVert
             #pragma fragment ShadowFrag
 
-            #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
 
@@ -170,6 +169,8 @@
                 float _CurveValue;
             CBUFFER_END
 
+            float3 _LightDirection;
+
             Varyings ShadowVert(Attributes IN)
             {
                 Varyings OUT;
@@ -183,11 +184,8 @@
                 float offsetY = -distSqXZ * _CurveValue;
                 positionWS += float3(0.0f, offsetY, 0.0f);
 
-                // Transform for shadow casting
-                float3 lightDirectionWS = _MainLightPosition.xyz;
-                float4 positionCS = TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, lightDirectionWS));
-
-                OUT.positionCS = positionCS;
+                // Transform for shadow casting without bias
+                OUT.positionCS = TransformWorldToHClip(positionWS);
                 return OUT;
             }
 

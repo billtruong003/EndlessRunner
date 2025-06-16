@@ -9,19 +9,23 @@
         [HDR] _EmissionColor("Emission Color", Color) = (0,0,0,1)
         _EmissionIntensity("Emission Intensity", Range(0, 10)) = 1
         [HDR] _AmbientColor("Ambient Color", Color) = (0.4, 0.4, 0.4, 1)
-        [HDR] _SpecularColor("Specular Color", Color) = (0.9, 0.9, 0.9, 1)
-        _Glossiness("Glossiness", Float) = 32
-        [HDR] _RimColor("Rim Color", Color) = (1, 1, 1, 1)
-        _RimAmount("Rim Amount", Range(0, 1)) = 0.716
-        _RimThreshold("Rim Threshold", Range(0, 1)) = 0.1
-        _CurveValue("Vertical Curve", Range(-1, 1)) = 0.01
-        _LateralCurve("Lateral Curve", Range(-1, 1)) = 0
+        [HDR] _ToonLitColor("Toon Lit Color", Color) = (1, 1, 1, 1)
+        [HDR] _ToonShadowColor("Toon Shadow Color", Color) = (0.5, 0.5, 0.5, 1)
+        _ToonThreshold("Toon Threshold", Range(0, 1)) = 0.5
+        _ToonSmoothness("Toon Smoothness", Range(0.001, 0.5)) = 0.05
+        _CurveValue("Vertical Curve", Range(-10, 10)) = 0.01
+        _LateralCurve("Lateral Curve", Range(-10, 10)) = 0
         _MaxCurveDistance("Max Curve Distance", Float) = 100
         _MinCurveHeight("Min Curve Height", Float) = -100 // Prevent clipping below this height
+        _CurveNormalOffset("Curve Normal Offset", Range(0, 1)) = 0.1 // Offset for normal adjustment due to curvature
+        _OutlineThickness("Outline Thickness", Range(0, 0.1)) = 0.01
+        _OutlineColor("Outline Color", Color) = (0, 0, 0, 1)
+        _OutlineDistanceFactor("Outline Distance Factor", Range(0, 2)) = 0.5 // How much distance affects outline thickness
+        _OutlineCurveFactor("Outline Curve Factor", Range(0, 2)) = 0.2 // How much curvature affects outline thickness
     }
     SubShader
     {
-        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "IgnoreProjector" = "True" }
+        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "IgnoreProjector" = "True" "Queue" = "Geometry" }
         LOD 200
 
         Pass
@@ -72,17 +76,17 @@
                 float4 _EmissionMap_ST;
                 half4 _Color;
                 half4 _AmbientColor;
-                half4 _SpecularColor;
-                float _Glossiness;
+                half4 _ToonLitColor;
+                half4 _ToonShadowColor;
+                float _ToonThreshold;
+                float _ToonSmoothness;
                 half4 _EmissionColor;
                 half _EmissionIntensity;
-                half4 _RimColor;
-                float _RimAmount;
-                float _RimThreshold;
                 float _CurveValue;
                 float _LateralCurve;
                 float _MaxCurveDistance;
                 float _MinCurveHeight;
+                float _CurveNormalOffset;
             CBUFFER_END
 
             Varyings vert(Attributes IN)
@@ -94,22 +98,22 @@
                 float distXZ = length(distanceXZ);
                 float distFactor = min(distXZ, _MaxCurveDistance) / _MaxCurveDistance;
 
-                // Vertical curvature with clamping
+                // Vertical curvature with clamping to simulate a downward curve as distance increases
                 float offsetY = -distFactor * distFactor * _CurveValue * _MaxCurveDistance;
                 offsetY = max(offsetY, _MinCurveHeight - posWS.y); // Prevent clipping below min height
 
-                // Lateral curvature (Subway Surfers-style)
+                // Lateral curvature (Subway Surfers-style) to bend the world sideways
                 float3 cameraForward = normalize(float3(_WorldSpaceCameraPos.x, 0, _WorldSpaceCameraPos.z) - posWS);
                 float3 lateralDir = cross(float3(0, 1, 0), cameraForward);
                 float offsetLateral = distFactor * distFactor * _LateralCurve * _MaxCurveDistance;
                 float3 modifiedPosWS = posWS + float3(offsetLateral * lateralDir.x, offsetY, offsetLateral * lateralDir.z);
 
-                // Transform normal to account for curvature
+                // Transform normal to account for curvature, adjusting lighting to match the bent surface
                 float3 normalWS = TransformObjectToWorldNormal(IN.normalOS);
                 float3 tangentWS = TransformObjectToWorldDir(IN.tangentOS.xyz);
-                float3 modifiedNormalWS = normalize(normalWS + float3(offsetLateral * 0.1, -offsetY * 0.1, 0));
+                float3 modifiedNormalWS = normalize(normalWS + float3(offsetLateral * _CurveNormalOffset, -offsetY * _CurveNormalOffset, 0));
 
-                // Ensure position stays within reasonable bounds
+                // Ensure position stays within reasonable bounds to avoid extreme deformation
                 modifiedPosWS.y = max(modifiedPosWS.y, _MinCurveHeight);
 
                 OUT.positionCS = TransformWorldToHClip(modifiedPosWS);
@@ -136,37 +140,17 @@
                 float3x3 TBN = float3x3(tangentWS, bitangentWS, normalWS);
                 normalWS = normalize(mul(normalTS, TBN));
 
-                // Normalize view direction
-                float3 viewDirWS = normalize(IN.viewDirWS);
-
-                // Get main light
-                Light mainLight = GetMainLight();
+                // Get main light with shadow coord
+                Light mainLight = GetMainLight(IN.shadowCoord);
                 float3 lightDirWS = mainLight.direction;
-                half3 lightColor = mainLight.color;
-                half shadow = MainLightRealtimeShadow(IN.shadowCoord);
-                half NdotL = dot(normalWS, lightDirWS);
-                half lightIntensity = smoothstep(0, 0.01, NdotL * shadow);
-                half4 light = lightIntensity * half4(lightColor, 1);
+                half NdotL = saturate(dot(normalWS, lightDirWS));
+                half toonFactor = smoothstep(_ToonThreshold, _ToonThreshold + _ToonSmoothness, NdotL);
+                toonFactor *= mainLight.shadowAttenuation;
+                half3 toonShadedColor = lerp(_ToonShadowColor.rgb, _ToonLitColor.rgb, toonFactor);
 
-                // Ambient light
-                half4 ambient = _AmbientColor;
-
-                // Specular
-                float3 halfVector = normalize(lightDirWS + viewDirWS);
-                float NdotH = dot(normalWS, halfVector);
-                float specularIntensity = pow(NdotH * lightIntensity, _Glossiness * _Glossiness);
-                float specularIntensitySmooth = smoothstep(0.005, 0.01, specularIntensity);
-                half4 specular = specularIntensitySmooth * _SpecularColor;
-
-                // Rim lighting
-                float rimDot = 1 - dot(viewDirWS, normalWS);
-                float rimIntensity = rimDot * pow(NdotL, _RimThreshold);
-                rimIntensity = smoothstep(_RimAmount - 0.01, _RimAmount + 0.01, rimIntensity);
-                half4 rim = rimIntensity * _RimColor;
-
-                // Final color
-                half4 finalColor = albedo * (ambient + light + specular + rim) + half4(emission, 0);
-                return finalColor;
+                // Final color with ambient and emission
+                half3 finalColor = albedo.rgb * toonShadedColor + _AmbientColor.rgb + emission;
+                return half4(finalColor, 1);
             }
             ENDHLSL
         }
@@ -233,6 +217,81 @@
             half4 ShadowFrag(Varyings IN) : SV_Target
             {
                 return 0;
+            }
+            ENDHLSL
+        }
+
+        Pass
+        {
+            Name "Outline"
+            Tags { "LightMode" = "UniversalForwardOnly" }
+            Cull Front
+            ZWrite On
+            ZTest LEqual
+
+            HLSLPROGRAM
+            #pragma vertex OutlineVert
+            #pragma fragment OutlineFrag
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+            struct Attributes
+            {
+                float4 positionOS : POSITION;
+                float3 normalOS : NORMAL;
+            };
+
+            struct Varyings
+            {
+                float4 positionCS : SV_POSITION;
+            };
+
+            CBUFFER_START(UnityPerMaterial)
+                float _CurveValue;
+                float _LateralCurve;
+                float _MaxCurveDistance;
+                float _MinCurveHeight;
+                float _OutlineThickness;
+                float4 _OutlineColor;
+                float _OutlineDistanceFactor;
+                float _OutlineCurveFactor;
+            CBUFFER_END
+
+            Varyings OutlineVert(Attributes IN)
+            {
+                Varyings OUT;
+                float3 posWS = TransformObjectToWorld(IN.positionOS.xyz);
+                float3 distanceXZ = posWS.xyz - _WorldSpaceCameraPos.xyz;
+                distanceXZ.y = 0;
+                float distXZ = length(distanceXZ);
+                float distFactor = min(distXZ, _MaxCurveDistance) / _MaxCurveDistance;
+
+                // Vertical curvature with clamping
+                float offsetY = -distFactor * distFactor * _CurveValue * _MaxCurveDistance;
+                offsetY = max(offsetY, _MinCurveHeight - posWS.y);
+
+                // Lateral curvature
+                float3 cameraForward = normalize(float3(_WorldSpaceCameraPos.x, 0, _WorldSpaceCameraPos.z) - posWS);
+                float3 lateralDir = cross(float3(0, 1, 0), cameraForward);
+                float offsetLateral = distFactor * distFactor * _LateralCurve * _MaxCurveDistance;
+                float3 modifiedPosWS = posWS + float3(offsetLateral * lateralDir.x, offsetY, offsetLateral * lateralDir.z);
+
+                // Ensure position stays within bounds
+                modifiedPosWS.y = max(modifiedPosWS.y, _MinCurveHeight);
+
+                // Offset along normal for outline, adjusted by curvature and distance factors for better adaptation
+                float3 normalWS = TransformObjectToWorldNormal(IN.normalOS);
+                float curveImpact = abs(offsetLateral) * _OutlineCurveFactor; // Impact of lateral curve on outline
+                float adjustedThickness = _OutlineThickness * (1.0 + distFactor * _OutlineDistanceFactor + curveImpact);
+                adjustedThickness = clamp(adjustedThickness, _OutlineThickness * 0.5, _OutlineThickness * 1.5); // Limit variation
+                modifiedPosWS += normalWS * adjustedThickness;
+
+                OUT.positionCS = TransformWorldToHClip(modifiedPosWS);
+                return OUT;
+            }
+
+            half4 OutlineFrag(Varyings IN) : SV_Target
+            {
+                return _OutlineColor;
             }
             ENDHLSL
         }
