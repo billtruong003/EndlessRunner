@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55944217b3a03e945ba25b60f0324778, type: 3}
+  m_Name: NewPattern 1
+  m_EditorClassIdentifier: 
+  patternName: Pattern_Medium_JumpObstacle
+  patternLength: 20
+  difficulty: 1
+  presetToGenerate: 0
+  objectSpacing: 2
+  coinPoolTag: Coin
+  lowObstaclePoolTag: ObstacleLow
+  highObstaclePoolTag: ObstacleHigh
+  objectsToSpawn:
+  - objectName: Wall L
+    type: 5
+    poolTag: ObstacleHigh
+    lane: -1
+    zOffset: 2
+    yOffset: 1.5
+  - objectName: Wall R
+    type: 5
+    poolTag: ObstacleHigh
+    lane: 1
+    zOffset: 2
+    yOffset: 1.5

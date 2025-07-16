@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55944217b3a03e945ba25b60f0324778, type: 3}
+  m_Name: NewPattern
+  m_EditorClassIdentifier: 
+  patternName: Pattern_Easy_CoinLine_Middle
+  patternLength: 10
+  difficulty: 100
+  presetToGenerate: 1
+  objectSpacing: 2
+  coinPoolTag: Coin
+  lowObstaclePoolTag: ObstacleLow
+  highObstaclePoolTag: ObstacleHigh
+  objectsToSpawn:
+  - objectName: Coin
+    type: 0
+    poolTag: Coin
+    lane: 0
+    zOffset: 0
+    yOffset: 1
+  - objectName: Coin
+    type: 0
+    poolTag: Coin
+    lane: 0
+    zOffset: 2
+    yOffset: 1
+  - objectName: Coin
+    type: 0
+    poolTag: Coin
+    lane: 0
+    zOffset: 4
+    yOffset: 1
+  - objectName: Coin
+    type: 0
+    poolTag: Coin
+    lane: 0
+    zOffset: 6
+    yOffset: 1
+  - objectName: Coin
+    type: 0
+    poolTag: Coin
+    lane: 0
+    zOffset: 8
+    yOffset: 1
+  - objectName: Coin
+    type: 0
+    poolTag: Coin
+    lane: 0
+    zOffset: 10
+    yOffset: 1
+  - objectName: Coin
+    type: 0
+    poolTag: Coin
+    lane: 0
+    zOffset: 12
+    yOffset: 1
+  - objectName: Coin
+    type: 0
+    poolTag: Coin
+    lane: 0
+    zOffset: 14
+    yOffset: 1
+  - objectName: Coin
+    type: 0
+    poolTag: Coin
+    lane: 0
+    zOffset: 16
+    yOffset: 1
+  - objectName: Coin
+    type: 0
+    poolTag: Coin
+    lane: 0
+    zOffset: 18
+    yOffset: 1

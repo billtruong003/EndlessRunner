@@ -1,35 +1,16 @@
 using UnityEngine;
 
-public class WingsCollectable : BaseCollectable
+public class WingCollectible : CollectibleBase
 {
+    [Tooltip("Thời gian hiệu ứng bay (tính bằng giây).")]
+    [SerializeField] private float flyDuration = 8f;
 
-    [SerializeField] private float speedBoost = 2f;
-    [SerializeField] private float boostDuration = 5f;
-
-    public override void Collect(GameObject collector)
+    protected override void OnCollect(PlayerStat playerStat)
     {
-        PlayerStat playerStat = collector.GetComponent<PlayerStat>();
-        if (playerStat != null)
+        PlayerController playerController = playerStat.GetComponent<PlayerController>();
+        if (playerController != null)
         {
-            playerStat.BoostSpeed(speedBoost, boostDuration);
-        }
-    }
-
-    public override void OnCollectEffect()
-    {
-        base.OnCollectEffect();
-        if (collectSound != null)
-        {
-            AudioSource.PlayClipAtPoint(collectSound, transform.position);
-        }
-        if (collectEffect != null)
-        {
-            collectEffect.Play();
-        }
-        if (meshRenderer != null)
-        {
-            meshRenderer.enabled = false;
-            anim.enabled = false;
+            playerController.ActivateFly(flyDuration);
         }
     }
 }

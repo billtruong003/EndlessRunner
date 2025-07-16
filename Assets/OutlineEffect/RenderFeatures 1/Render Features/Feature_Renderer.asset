@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbd6e526a1bb489a8df34cbfcfca6bfc, type: 3}
   m_Name: OutlineRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   FeatureSettings:
     RenderPassEvent: 550
     LayerMask:
@@ -27,11 +27,11 @@ MonoBehaviour:
   MaterialSettings:
     OutlineScale: 0.35
     RobertsCrossMultiplier: 100
-    DepthThreshold: 20
+    DepthThreshold: 15
     NormalThreshold: 50
     SteepAngleThreshold: 0.2
     SteepAngleMultiplier: 25
-    OutlineColor: {r: 1, g: 1, b: 1, a: 1}
+    OutlineColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,14 +77,14 @@ MonoBehaviour:
     passOperation: 2
     failOperation: 0
     zFailOperation: 0
-  m_ShadowTransparentReceive: 1
+  m_ShadowTransparentReceive: 0
   m_RenderingMode: 0
   m_DepthPrimingMode: 0
   m_CopyDepthMode: 1
   m_DepthAttachmentFormat: 0
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0
-  m_IntermediateTextureMode: 1
+  m_IntermediateTextureMode: 0
 --- !u!114 &3755093968640982054
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbd6e526a1bb489a8df34cbfcfca6bfc, type: 3}
   m_Name: OutlineRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   FeatureSettings:
     RenderPassEvent: 550
     LayerMask:

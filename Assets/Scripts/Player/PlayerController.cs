@@ -1,254 +1,242 @@
-using System.Collections;
-using UnityEngine;
+// FileName: PlayerController.cs
 
+using UnityEngine;
+using System.Collections;
+
+[RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
 public class PlayerController : MonoBehaviour
 {
-    [Header("References")]
+    [Header("Core References")]
     [SerializeField] private Rigidbody rb;
     [SerializeField] private Animator anim;
-    [SerializeField] private CapsuleCollider playerCollider;
     [SerializeField] private PlayerStat playerStat;
     [SerializeField] private Transform groundCheck;
-    [SerializeField] private LayerMask groundLayer;
 
     [Header("Movement Settings")]
     [SerializeField] private float baseForwardSpeed = 10f;
-    [SerializeField] private float jumpForce = 12f;
-    [SerializeField] private float gravity = -25f;
     [SerializeField] private float laneDistance = 3f;
-    [SerializeField] private float laneSwitchSpeed = 10f;
+    [SerializeField] private float laneSwitchSpeed = 15f;
 
-    [Header("Actions")]
+    [Header("Jumping & Gravity")]
+    [SerializeField] private float jumpForce = 12f;
+    [SerializeField] private float gravityScale = 2.5f;
+    [SerializeField] private float fastFallGravityScale = 4f;
+    [SerializeField] private LayerMask groundLayer;
+
+    [Header("Sliding")]
     [SerializeField] private float slideDuration = 1f;
-    [SerializeField] private float slideSpeedBoost = 2f;
 
-    // Private variables
+    [Header("Flying")]
+    [SerializeField] private float flyAltitude = 5f;
+    [SerializeField] private float flyTransitionSpeed = 4f;
+
+    // State Machine
     private bool isGrounded;
     private bool isJumping;
     private bool isSliding;
-    private float verticalVelocity;
-    private int currentLane = 1; // 0 = left, 1 = middle, 2 = right
+    private bool isFlying;
+
+    // Movement Internals
+    private int currentLane = 1; // 0=Left, 1=Middle, 2=Right
     private float targetXPosition;
+    private float currentForwardSpeed;
+    private Coroutine activeSlideCoroutine;
+    private Coroutine activeFlyCoroutine;
+
+    // Collider Management
+    private CapsuleCollider playerCollider;
     private float originalColliderHeight;
     private Vector3 originalColliderCenter;
 
-    // Speed management
-    private float currentForwardSpeed;
-    private float speedMultiplier = 1f;
+    public float CurrentForwardSpeed => currentForwardSpeed;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+        playerCollider = GetComponent<CapsuleCollider>();
+
+        originalColliderHeight = playerCollider.height;
+        originalColliderCenter = playerCollider.center;
+
+        rb.useGravity = false; // We will handle gravity manually for better control.
+    }
 
     private void Start()
     {
-        if (playerCollider != null)
-        {
-            originalColliderHeight = playerCollider.height;
-            originalColliderCenter = playerCollider.center;
-        }
-
         currentLane = 1;
         targetXPosition = 0;
-        currentForwardSpeed = baseForwardSpeed;
     }
 
     private void Update()
     {
-        // Get speed from PlayerStat if available
         if (playerStat != null)
         {
             currentForwardSpeed = baseForwardSpeed + playerStat.GetSpeed();
         }
 
-        CheckGround();
+        isGrounded = CheckIfGrounded();
+        anim.SetBool("IsGrounded", isGrounded);
+
         HandleInput();
-        HandleGravity();
     }
 
     private void FixedUpdate()
     {
         HandleMovement();
+        HandleGravity();
     }
 
     private void HandleInput()
     {
-        // Lane switching
         if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            MoveLane(false);
+            ChangeLane(-1);
         }
         else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
-            MoveLane(true);
+            ChangeLane(1);
         }
 
-        // Jump
+        if (isFlying) return; // Disable jump/slide while flying
+
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !isSliding)
         {
             Jump();
         }
 
-        // Slide
         if ((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) && isGrounded && !isSliding)
         {
-            StartCoroutine(Slide());
-        }
-
-        // Fast fall when sliding in air
-        if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && !isGrounded)
-        {
-            verticalVelocity = -20f;
+            StartSlide();
         }
     }
 
     private void HandleMovement()
     {
-        Vector3 moveVector = -transform.forward * currentForwardSpeed * speedMultiplier;
+        Vector3 targetVelocity = rb.linearVelocity;
+        targetVelocity.z = currentForwardSpeed;
 
-        // Smooth lane switching
-        float newX = Mathf.Lerp(transform.position.x, targetXPosition, Time.fixedDeltaTime * laneSwitchSpeed);
+        float smoothXPosition = Mathf.Lerp(rb.position.x, targetXPosition, Time.fixedDeltaTime * laneSwitchSpeed);
+        rb.MovePosition(new Vector3(smoothXPosition, rb.position.y, rb.position.z));
 
-        // Apply vertical velocity only if not grounded or sliding to prevent interference
-        if (isGrounded && !isJumping || isSliding)
+        if (isFlying)
         {
-            moveVector.y = -2f; // Small downward force to stay grounded
-        }
-        else
-        {
-            moveVector.y = verticalVelocity;
+            float targetY = Mathf.Lerp(rb.position.y, flyAltitude, Time.fixedDeltaTime * flyTransitionSpeed);
+            rb.MovePosition(new Vector3(rb.position.x, targetY, rb.position.z));
+            targetVelocity.y = 0;
         }
 
-        // Move the player using velocity to ensure smooth movement
-        rb.linearVelocity = moveVector;
-        transform.position = new Vector3(newX, transform.position.y, transform.position.z);
+        rb.linearVelocity = targetVelocity;
     }
 
     private void HandleGravity()
     {
-        if (isGrounded && verticalVelocity < 0)
+        if (isFlying || isGrounded)
         {
-            verticalVelocity = -2f; // Small downward force to keep grounded
+            return;
         }
-        else if (!isGrounded)
-        {
-            verticalVelocity += gravity * Time.deltaTime * 0.8f; // Slightly reduce gravity effect for better jump feel
-        }
-        else
-        {
-            verticalVelocity += gravity * Time.deltaTime;
-        }
+
+        float currentGravityScale = (rb.linearVelocity.y < 0 && (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)))
+            ? fastFallGravityScale
+            : gravityScale;
+
+        rb.AddForce(Physics.gravity * currentGravityScale, ForceMode.Acceleration);
     }
 
-    private void MoveLane(bool goingRight)
+    private void ChangeLane(int direction)
     {
-        if (!goingRight)
-        {
-            currentLane--;
-            if (currentLane < 0) currentLane = 0;
-        }
-        else
-        {
-            currentLane++;
-            if (currentLane > 2) currentLane = 2;
-        }
-
+        currentLane = Mathf.Clamp(currentLane + direction, 0, 2);
         targetXPosition = (currentLane - 1) * laneDistance;
-
-        // Animation
-        anim.SetFloat("Centroid", goingRight ? 1 : -1);
-        StartCoroutine(ResetCentroid());
-    }
-
-    private IEnumerator ResetCentroid()
-    {
-        yield return new WaitForSeconds(0.3f);
-        anim.SetFloat("Centroid", 0);
     }
 
     private void Jump()
     {
-        verticalVelocity = jumpForce;
         isJumping = true;
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z); // Reset vertical velocity before jump
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         anim.SetTrigger("Jump");
-        StartCoroutine(JumpCooldown());
+        StartCoroutine(JumpCooldownRoutine());
     }
 
-    private IEnumerator JumpCooldown()
+    private IEnumerator JumpCooldownRoutine()
     {
         yield return new WaitForSeconds(0.1f);
         isJumping = false;
     }
 
-    private IEnumerator Slide()
+    private void StartSlide()
+    {
+        if (activeSlideCoroutine != null)
+        {
+            StopCoroutine(activeSlideCoroutine);
+        }
+        activeSlideCoroutine = StartCoroutine(SlideRoutine());
+    }
+
+    private IEnumerator SlideRoutine()
     {
         isSliding = true;
         anim.SetTrigger("Slide");
 
-        // Reduce collider size
-        if (playerCollider != null)
-        {
-            playerCollider.height = originalColliderHeight * 0.5f;
-            playerCollider.center = originalColliderCenter - new Vector3(0, originalColliderHeight * 0.25f, 0);
-        }
-
-        // Speed boost while sliding
-        speedMultiplier = slideSpeedBoost;
+        playerCollider.height = originalColliderHeight * 0.5f;
+        playerCollider.center = new Vector3(0, originalColliderHeight * 0.25f, 0);
 
         yield return new WaitForSeconds(slideDuration);
 
-        // Reset collider
-        if (playerCollider != null)
-        {
-            playerCollider.height = originalColliderHeight;
-            playerCollider.center = originalColliderCenter;
-        }
+        playerCollider.height = originalColliderHeight;
+        playerCollider.center = originalColliderCenter;
 
-        speedMultiplier = 1f;
         isSliding = false;
+        activeSlideCoroutine = null;
     }
 
-    private void CheckGround()
+    public void ActivateFly(float duration)
     {
-        bool wasGrounded = isGrounded;
-        isGrounded = Physics.CheckSphere(groundCheck.position, 0.25f, groundLayer); // Slightly increase check radius
-
-        // Landing
-        if (!wasGrounded && isGrounded && !isJumping)
+        if (activeFlyCoroutine != null)
         {
-            anim.SetTrigger("Land");
+            StopCoroutine(activeFlyCoroutine);
         }
+        activeFlyCoroutine = StartCoroutine(FlyRoutine(duration));
+    }
+
+    private IEnumerator FlyRoutine(float duration)
+    {
+        isFlying = true;
+        isJumping = false;
+        if (isSliding) // Cancel slide if active
+        {
+            StopCoroutine(activeSlideCoroutine);
+            playerCollider.height = originalColliderHeight;
+            playerCollider.center = originalColliderCenter;
+            isSliding = false;
+        }
+
+        anim.SetBool("IsFlying", true);
+
+        yield return new WaitForSeconds(duration);
+
+        anim.SetBool("IsFlying", false);
+        isFlying = false;
+        activeFlyCoroutine = null;
+    }
+
+    private bool CheckIfGrounded()
+    {
+        // Prevent ground check from detecting the player itself or triggers
+        return Physics.CheckSphere(groundCheck.position, 0.2f, groundLayer, QueryTriggerInteraction.Ignore);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // Handle collectables through their own scripts
         if (other.CompareTag("Obstacle"))
         {
             if (playerStat != null && !playerStat.IsShieldActive())
             {
                 playerStat.TakeDamage(10);
-                // Add hit effect, sound, etc.
             }
         }
     }
 
-    public void SetSpeedMultiplier(float multiplier, float duration)
-    {
-        speedMultiplier = multiplier;
-        if (duration > 0)
-        {
-            StartCoroutine(ResetSpeedMultiplier(duration));
-        }
-    }
-
-    private IEnumerator ResetSpeedMultiplier(float duration)
-    {
-        yield return new WaitForSeconds(duration);
-        speedMultiplier = 1f;
-    }
-
-    // Public methods for external use
-    public float GetCurrentSpeed() => currentForwardSpeed * speedMultiplier;
-    public int GetCurrentLane() => currentLane;
-
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
         if (groundCheck != null)
         {

@@ -50,6 +50,7 @@ public class GameManager : Singleton<GameManager>
         base.Awake();
         LoadHighScore();
         Multiplier = baseMultiplier;
+
     }
 
     private void Start()
@@ -62,6 +63,7 @@ public class GameManager : Singleton<GameManager>
         {
             playerStat.OnPlayerDeath += HandlePlayerDeath;
         }
+
     }
 
     private void Update()
@@ -96,7 +98,7 @@ public class GameManager : Singleton<GameManager>
         // Update distance
         if (playerController != null)
         {
-            distanceTraveled += playerController.GetCurrentSpeed() * Time.deltaTime;
+            distanceTraveled += playerController.CurrentForwardSpeed * Time.deltaTime;
         }
 
         // Increase difficulty over time

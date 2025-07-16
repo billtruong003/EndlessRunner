@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Custom_URPObjectFog 1
+  m_Shader: {fileID: 4800000, guid: 06543e75e4e7c604e87ec867d5a6fc7c, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _FOGMODE_EXPONENTIALSQUARED
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: 91eaafcc93e762643a6d3fd2c3b1630a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _Cull: 2
+    - _Density: 4
+    - _DstBlend: 5
+    - _FogAlpha: 0.768
+    - _FogDensity: 0.01
+    - _FogEnd: -15.21
+    - _FogMode: 2
+    - _FogStart: 0
+    - _HeightFade: 0
+    - _LightAbsorption: 0.915
+    - _MaxDistance: 5.7
+    - _NoiseScale: 1
+    - _NoiseSpeed: 0.05
+    - _SrcBlend: 6
+    - _ZTest: 4
+    - _ZWrite: 1
+    m_Colors:
+    - _Color: {r: 0.042363837, g: 0.044440683, b: 0.5283019, a: 1}
+    - _FogColor: {r: 0.122705705, g: 0.09549659, b: 0.5471698, a: 0.84313726}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

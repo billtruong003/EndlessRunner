@@ -1,20 +1,11 @@
 using UnityEngine;
 
-public class HealthPotionCollectable : BaseCollectable
+public class HealthCollectible : CollectibleBase
 {
-    [SerializeField] private int healthAmount = 20;
+    [SerializeField] private int healthToRestore = 25;
 
-    public override void Collect(GameObject collector)
+    protected override void OnCollect(PlayerStat playerStat)
     {
-        PlayerStat playerStat = collector.GetComponent<PlayerStat>();
-        if (playerStat != null)
-        {
-            playerStat.RestoreHealth(healthAmount);
-        }
-    }
-
-    public override void DisableObject()
-    {
-        gameObject.SetActive(false);
+        playerStat.RestoreHealth(healthToRestore);
     }
 }
